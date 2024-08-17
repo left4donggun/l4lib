@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>백분율 계산기</title>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        header {
+            background-color: #ffffff;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+            height: 75px;
+            line-height: 75px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-bottom: none; /* 경계 제거 */
+        }
+        .header-title {
+            font-size: 22.5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+        }
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+        }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 75px;
+            right: 0;
+            background-color: #ffffff;
+            border: none; /* 경계 제거 */
+            border-radius: 0; /* 모서리 둥글기 제거 */
+            box-shadow: none; /* 그림자 제거 */
+            padding: 10px;
+            box-sizing: border-box;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            z-index: 1001;
+        }
+        .menu.show {
+            max-height: 300px; /* 충분한 값을 설정하여 모든 메뉴 항목이 보이게 합니다 */
+            opacity: 1;
+        }
+        .menu a {
+            text-decoration: none;
+            color: #333;
+            padding: 8px 0;
+        }
+        @media (max-width: 600px) {
+            header {
+                padding: 10px;
+                font-size: 14px;
+                line-height: 37.5px;
+            }
+            .hamburger {
+                display: flex;
+            }
+        }
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            flex: 1;
+            margin-top: 75px;
+            position: relative;
+        }
+        .ad-banner {
+            width: 19%;
+            background-color: #e0e0e0;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .container {
+            width: 60%;
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: #ffffff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .calculator .inline {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+        .calculator input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            flex: 1 1 auto;
+            min-width: 100px;
+            max-width: 150px;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border: 1px solid #d3d3d3;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+        footer {
+            background-color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            margin-top: auto;
+        }
+        @media (max-width: 600px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+            }
+            .ad-banner {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+            .calculator input[type="text"] {
+                width: 30%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-title" onclick="location.reload();">백분율 계산기</div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="menu" id="menu">
+            <a href="./percentage.html" style="text-decoration : underline;">백분율 계산기</a>
+            <a href="./monthcal.html">역에의한 월 계산</a>
+        </div>
+    </header>
+    <div class="main-container">
+        <div class="ad-banner"></div>
+        <div class="container">
+            <div class="calculator" id="calc1">
+                <div class="inline">
+                    <input type="text" id="value1a" oninput="calculate()" placeholder="전체 값 입력" value="100">
+                    <span>의</span>
+                    <input type="text" id="value2a" oninput="calculate()" placeholder="백분율 입력" value="60">
+                    <span>%는</span>
+                    <p id="result1">60</p>
+                </div>
+            </div>
+            <div class="calculator" id="calc2">
+                <div class="inline">
+                    <input type="text" id="value1b" oninput="calculate()" placeholder="전체 값 입력" value="100">
+                    <span>의</span>
+                    <input type="text" id="value2b" oninput="calculate()" placeholder="값 입력" value="60">
+                    <span>는</span>
+                    <p id="result2">60%</p>
+                </div>
+            </div>
+            <div class="calculator" id="calc3">
+                <div class="inline">
+                    <input type="text" id="value1c" oninput="calculate()" placeholder="값 입력" value="60">
+                    <span>은</span>
+                    <input type="text" id="value2c" oninput="calculate()" placeholder="전체 값 입력" value="100">
+                    <span>의</span>
+                    <p id="result3">60%</p>
+                </div>
+            </div>
+            <div class="calculator" id="calc4">
+                <div class="inline">
+                    <input type="text" id="value1d" oninput="calculate()" placeholder="전체 값 입력" value="100">
+                    <span>에서</span>
+                    <input type="text" id="value2d" oninput="calculate()" placeholder="백분율 입력" value="60">
+                    <span>%를 빼면</span>
+                    <p id="result4">40</p>
+                </div>
+            </div>
+            <div class="calculator" id="calc5">
+                <div class="inline">
+                    <input type="text" id="value1e" oninput="calculate()" placeholder="전체 값 입력" value="100">
+                    <span>에</span>
+                    <input type="text" id="value2e" oninput="calculate()" placeholder="백분율 입력" value="60">
+                    <span>%를 더하면</span>
+                    <p id="result5">160</p>
+                </div>
+            </div>
+            <div class="info" id="info">
+                <h2>사이트 안내</h2>
+                <p>
+                    이 사이트는 다양한 백분율 계산식을 제공하는 도구입니다. 다음과 같은 기능을 사용하실 수 있습니다:
+                </p>
+                <ul>
+                    <li><strong>전체의 백분율 계산:</strong> 입력된 전체 값과 백분율로 결과를 계산합니다.</li>
+                    <li><strong>백분율 비율 계산:</strong> 입력된 값이 전체 값의 몇 퍼센트인지 계산합니다.</li>
+                    <li><strong>백분율과 전체 값으로 비율 계산:</strong> 백분율과 전체 값을 기준으로 비율을 계산합니다.</li>
+                    <li><strong>전체 값에서 백분율 빼기:</strong> 전체 값에서 특정 백분율을 뺀 결과를 계산합니다.</li>
+                    <li><strong>전체 값에 백분율 더하기:</strong> 전체 값에 특정 백분율을 더한 결과를 계산합니다.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ad-banner"></div>
+    </div>
+    <footer>
+        <p>&copy; left4donggun All rights reserved.</p>
+    </footer>
+    <script>
+        function calculate() {
+            const value1a = parseFloat(document.getElementById('value1a').value) || 0;
+            const value2a = parseFloat(document.getElementById('value2a').value) || 0;
+            const result1 = (value1a * (value2a / 100)).toFixed(2);
+            document.getElementById('result1').innerText = parseFloat(result1) === parseInt(result1) ? parseInt(result1) : result1;
+
+            const value1b = parseFloat(document.getElementById('value1b').value) || 0;
+            const value2b = parseFloat(document.getElementById('value2b').value) || 0;
+            const result2 = value1b === 0 ? '0%' : ((value2b / value1b) * 100).toFixed(2);
+            document.getElementById('result2').innerText = parseFloat(result2) === parseInt(result2) ? parseInt(result2) + '%' : result2 + '%';
+
+            const value1c = parseFloat(document.getElementById('value1c').value) || 0;
+            const value2c = parseFloat(document.getElementById('value2c').value) || 0;
+            const result3 = value2c === 0 ? '0%' : ((value1c / value2c) * 100).toFixed(2);
+            document.getElementById('result3').innerText = parseFloat(result3) === parseInt(result3) ? parseInt(result3) + '%' : result3 + '%';
+
+            const value1d = parseFloat(document.getElementById('value1d').value) || 0;
+            const value2d = parseFloat(document.getElementById('value2d').value) || 0;
+            const result4 = (value1d - (value1d * (value2d / 100))).toFixed(2);
+            document.getElementById('result4').innerText = parseFloat(result4) === parseInt(result4) ? parseInt(result4) : result4;
+
+            const value1e = parseFloat(document.getElementById('value1e').value) || 0;
+            const value2e = parseFloat(document.getElementById('value2e').value) || 0;
+            const result5 = (value1e + (value1e * (value2e / 100))).toFixed(2);
+            document.getElementById('result5').innerText = parseFloat(result5) === parseInt(result5) ? parseInt(result5) : result5;
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            if (menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            } else {
+                menu.classList.add('show');
+            }
+        }
+    </script>
+</body>
+</html>
